@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { Star } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Star, Heart, Sparkles } from "lucide-react";
 
 const API_URL = "https://cafeteria-rate-app.asmasoft.uz/rating";
 
@@ -10,6 +10,7 @@ export default function App() {
   const [overall, setOverall] = useState({ rating: "0.00", count: 0 });
   const [submitting, setSubmitting] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [lastSubmittedRating, setLastSubmittedRating] = useState(0); // Store the submitted rating
 
   // --------- API: GET overall rating ----------
   const fetchOverall = async () => {
@@ -41,11 +42,16 @@ export default function App() {
         body: JSON.stringify({ rating: selectedRating }), // whole number
       });
 
+      // Store the rating before resetting it
+      setLastSubmittedRating(selectedRating);
       setShowModal(true);
       fetchOverall(); // refresh overall after every submit
 
       // Modal 3.5s da yopiladi
-      setTimeout(() => setShowModal(false), 3500);
+      setTimeout(() => {
+        setShowModal(false);
+        setLastSubmittedRating(0); // Reset after modal closes
+      }, 3500);
       setSelectedRating(0);
     } catch (err) {
       console.error("POST error:", err);
@@ -56,12 +62,12 @@ export default function App() {
 
   // Floating food emojis positions
   const foodBubbles = [
-    { top: "6%", left: "12%", emoji: "🍕" },
-    { top: "10%", right: "10%", emoji: "🍔" },
-    { top: "45%", left: "4%", emoji: "🥗" },
-    { top: "48%", right: "4%", emoji: "🍣" },
-    { bottom: "5%", left: "14%", emoji: "🍩" },
-    { bottom: "8%", right: "12%", emoji: "🍹" },
+    { top: "6%", left: "12%", emoji: "./m1.png", size: "w-80 h-80" },
+    { top: "5%", right: "10%", emoji: "./m2.png", size: "w-80 h-80" },
+    { top: "45%", left: "4%", emoji: "./m3.png", size: "w-60 h-60" },
+    { top: "40%", right: "4%", emoji: "./m4.png", size: "w-60 h-60" },
+    { bottom: "5%", left: "14%", emoji: "./m5.png", size: "w-80 h-80" },
+    { bottom: "5%", right: "15%", emoji: "./m6.png", size: "w-80 h-80" },
   ];
 
   return (
@@ -83,14 +89,28 @@ export default function App() {
             ease: "easeInOut",
           }}
         >
-          <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-white/80 shadow-lg flex items-center justify-center text-3xl md:text-4xl">
-            {item.emoji}
-          </div>
+          <img src={item.emoji} className={item.size + " shadow-xl rounded-full"} alt="Floating food item" />
         </motion.div>
       ))}
 
       {/* Main content */}
-      <div className="relative w-full max-w-lg">
+      <div className="relative w-full max-w-2xl">
+        {/* Logo in the center above the survey card */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+          className="flex justify-center mb-6"
+        >
+          <div className="bg-white/90 backdrop-blur-md rounded-full shadow-lg p-4 flex items-center justify-center">
+            <img 
+              src="./pslogo.png" 
+              alt="Cafeteria Logo" 
+              className="h-32 md:h-29 object-contain rounded-full" // Increased size
+            />
+          </div>
+        </motion.div>
+
         {/* Survey card */}
         <motion.div
           initial={{ opacity: 0, y: 40, scale: 0.95 }}
@@ -101,11 +121,11 @@ export default function App() {
             Cafeteria Satisfaction Survey
           </h1>
           <p className="text-gray-500 text-sm md:text-base mb-6 text-center">
-            Please rate your overall satisfaction with today’s meals.
+            We invite you to share your thorough evaluation of our cafeteria's comprehensive services, including food variety, nutritional quality, and staff performance
           </p>
 
           {/* Stars (whole numbers only) */}
-          <div className="flex justify-center gap-3 mb-6">
+          <div className="flex justify-center gap-3 mb-20 mt-8">
             {[1, 2, 3, 4, 5].map((star) => (
               <button
                 key={star}
@@ -116,7 +136,7 @@ export default function App() {
                 className="focus:outline-none"
               >
                 <Star
-                  size={44}
+                  size={80}
                   className={`transition-transform ${
                     (hoverRating || selectedRating) >= star
                       ? "fill-yellow-400 text-yellow-400 scale-110"
@@ -181,30 +201,116 @@ export default function App() {
         </motion.div>
       </div>
 
-      {/* Thank-you modal */}
-      {showModal && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-20"
-        >
+      {/* Enhanced Thank-you modal */}
+      <AnimatePresence>
+        {showModal && (
           <motion.div
-            initial={{ scale: 0.8, y: 20, opacity: 0 }}
-            animate={{ scale: 1, y: 0, opacity: 1 }}
-            className="bg-white rounded-3xl shadow-2xl px-8 py-6 max-w-xs text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-20"
           >
-            <div className="mx-auto mb-3 w-14 h-14 rounded-full bg-green-100 flex items-center justify-center">
-              <span className="text-3xl text-green-500">✓</span>
-            </div>
-            <h2 className="text-lg font-semibold mb-1">
-              Thank you for your feedback!
-            </h2>
-            <p className="text-sm text-gray-600">
-              Your rating helps us improve the quality of the school kitchen.
-            </p>
+            <motion.div
+              initial={{ scale: 0.8, y: 20, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.8, y: 20, opacity: 0 }}
+              className="bg-gradient-to-br from-white to-orange-50 rounded-3xl shadow-2xl px-8 py-8 max-w-sm mx-4 relative overflow-hidden border border-orange-100"
+            >
+              {/* Background decorative elements */}
+              <motion.div
+                initial={{ scale: 0, rotate: -180 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ delay: 0.2, type: "spring" }}
+                className="absolute -top-6 -right-6 text-orange-200 opacity-60"
+              >
+                <Sparkles size={80} />
+              </motion.div>
+              
+              <motion.div
+                initial={{ scale: 0, rotate: 180 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ delay: 0.3, type: "spring" }}
+                className="absolute -bottom-8 -left-8 text-amber-200 opacity-60"
+              >
+                <Heart size={80} />
+              </motion.div>
+
+              {/* Main content */}
+              <div className="relative z-10">
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
+                  className="mx-auto mb-4 w-20 h-20 rounded-full bg-gradient-to-r from-green-400 to-emerald-500 flex items-center justify-center shadow-lg"
+                >
+                  <motion.span
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.3, type: "spring" }}
+                    className="text-3xl text-white"
+                  >
+                    ✓
+                  </motion.span>
+                </motion.div>
+
+                <motion.h2
+                  initial={{ y: 10, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                  className="text-2xl font-bold text-center mb-2 bg-gradient-to-r from-orange-500 to-amber-600 bg-clip-text text-transparent"
+                >
+                  Thank You!
+                </motion.h2>
+
+                <motion.p
+                  initial={{ y: 10, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.3 }}
+                  className="text-gray-600 text-center mb-4 leading-relaxed"
+                >
+                  Your <span className="font-semibold text-amber-600">{lastSubmittedRating}-star</span> rating helps us improve the quality of our cafeteria services.
+                </motion.p>
+
+                <motion.div
+                  initial={{ y: 10, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.4 }}
+                  className="flex justify-center gap-1 mb-4"
+                >
+                  {[1, 2, 3, 4, 5].map((i) => (
+                    <Star
+                      key={i}
+                      size={20}
+                      className={
+                        i <= lastSubmittedRating
+                          ? "fill-yellow-400 text-yellow-400"
+                          : "text-gray-300"
+                      }
+                    />
+                  ))}
+                </motion.div>
+
+                <motion.div
+                  initial={{ y: 10, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.5 }}
+                  className="text-xs text-gray-400 text-center"
+                >
+                  This dialog will close automatically
+                </motion.div>
+              </div>
+
+              {/* Progress bar */}
+              <motion.div
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ duration: 3.5, ease: "linear" }}
+                className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-green-400 to-emerald-500 origin-left"
+              />
+            </motion.div>
           </motion.div>
-        </motion.div>
-      )}
+        )}
+      </AnimatePresence>
     </div>
   );
 }
