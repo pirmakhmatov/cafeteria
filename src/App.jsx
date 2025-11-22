@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, Heart, Sparkles } from "lucide-react";
+import { Helmet } from "react-helmet";
 
 const API_URL = "https://cafeteria-rate-app.asmasoft.uz/rating";
 
@@ -72,6 +73,12 @@ export default function App() {
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-orange-100 via-amber-50 to-yellow-100 relative overflow-hidden px-4 py-8">
+      {/* Sahifa sarlavhasi va favicon */}
+      <Helmet>
+        <title>Powered by Coding Club</title>
+        <link rel="icon" type="image/png" href="./coding-club-logo.png" />
+      </Helmet>
+
       {/* Moving food images around the page */}
       {foodBubbles.map((item, idx) => (
         <motion.div
@@ -106,7 +113,7 @@ export default function App() {
             <img 
               src="./pslogo.png" 
               alt="Cafeteria Logo" 
-              className="h-32 md:h-29 object-contain rounded-full" // Increased size
+              className="h-32 md:h-29 object-contain rounded-full"
             />
           </div>
         </motion.div>
@@ -200,6 +207,22 @@ export default function App() {
           </div>
         </motion.div>
       </div>
+
+      {/* Footer - Powered by Coding Club */}
+      <motion.footer
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1, duration: 0.5 }}
+        className="absolute bottom-4 left-0 right-0 flex justify-center items-center gap-2 text-gray-600 text-sm"
+      >
+        <span>Powered by</span>
+        <img 
+          src="./logo.png" 
+          alt="Coding Club Logo" 
+          className="h-5 w-auto"
+        />
+        <span>Coding Club</span>
+      </motion.footer>
 
       {/* Enhanced Thank-you modal */}
       <AnimatePresence>
@@ -299,7 +322,6 @@ export default function App() {
                   This dialog will close automatically
                 </motion.div>
               </div>
-
               {/* Progress bar */}
               <motion.div
                 initial={{ scaleX: 0 }}
