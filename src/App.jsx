@@ -74,11 +74,6 @@ export default function App() {
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-orange-100 via-amber-50 to-yellow-100 relative overflow-hidden px-4 py-8">
       {/* Sahifa sarlavhasi va favicon */}
-      <Helmet>
-        <title>Powered by Coding Club</title>
-        <link rel="icon" type="image/png" href="./coding-club-logo.png" />
-      </Helmet>
-
       {/* Moving food images around the page */}
       {foodBubbles.map((item, idx) => (
         <motion.div
