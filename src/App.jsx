@@ -71,6 +71,14 @@ export default function App() {
     { bottom: "5%", right: "15%", emoji: "./m6.png", size: "w-80 h-80" },
   ];
 
+  // Get today's date
+  const today = new Date();
+  const formattedDate = today.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-orange-100 via-amber-50 to-yellow-100 relative overflow-hidden px-4 py-8">
       {/* Sahifa sarlavhasi va favicon */}
@@ -122,9 +130,16 @@ export default function App() {
           <h1 className="text-center text-2xl md:text-3xl font-bold text-gray-800 mb-1">
             Cafeteria Satisfaction Survey
           </h1>
-          <p className="text-gray-500 text-sm md:text-base mb-6 text-center">
+          <p className="text-gray-500 text-sm md:text-base mb-2 text-center">
             We invite you to share your thorough evaluation of our cafeteria's comprehensive services, including food variety, nutritional quality, and staff performance
           </p>
+          
+          {/* Today's Date - Added below the description */}
+          <div className="mb-6 text-center">
+            <p className="text-sm text-orange-500 font-medium">
+              {formattedDate}
+            </p>
+          </div>
 
           {/* Stars (whole numbers only) */}
           <div className="flex justify-center gap-3 mb-20 mt-8">
