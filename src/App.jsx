@@ -130,16 +130,9 @@ export default function App() {
           <h1 className="text-center text-2xl md:text-3xl font-bold text-gray-800 mb-1">
             Cafeteria Satisfaction Survey
           </h1>
-          <p className="text-gray-500 text-sm md:text-base mb-2 text-center">
+          <p className="text-gray-500 text-sm md:text-base mb-6 text-center">
             We invite you to share your thorough evaluation of our cafeteria's comprehensive services, including food variety, nutritional quality, and staff performance
           </p>
-          
-          {/* Today's Date - Added below the description */}
-          <div className="mb-6 text-center">
-            <p className="text-sm text-orange-500 font-medium">
-              {formattedDate}
-            </p>
-          </div>
 
           {/* Stars (whole numbers only) */}
           <div className="flex justify-center gap-3 mb-20 mt-8">
@@ -185,33 +178,42 @@ export default function App() {
           animate={{ opacity: 1, y: 12 }}
           className="mx-auto mt-6 w-full md:w-4/5"
         >
-          <div className="bg-white/90 backdrop-blur-md rounded-2xl shadow-xl px-5 py-4 flex items-center justify-between">
-            <div>
-              <p className="text-xs uppercase tracking-wide text-gray-400">
-                Overall result
-              </p>
-              <p className="text-2xl font-bold text-orange-500">
-                {overall.rating} <span className="text-base">/ 5.00</span>
-              </p>
-              <p className="text-sm text-gray-500">
-                Based on <span className="font-medium">{overall.count}</span>{" "}
-                student votes
-              </p>
-            </div>
-            <div className="flex flex-col items-end">
-              <div className="flex items-center gap-1 text-yellow-400">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <Star
-                    key={i}
-                    size={18}
-                    className={
-                      Number(overall.rating) >= i ? "fill-yellow-400" : ""
-                    }
-                  />
-                ))}
+          <div className="bg-white/90 backdrop-blur-md rounded-2xl shadow-xl px-5 py-4">
+            <div className="flex items-center justify-between mb-3">
+              <div>
+                <p className="text-xs uppercase tracking-wide text-gray-400">
+                  Overall result
+                </p>
+                <p className="text-2xl font-bold text-orange-500">
+                  {overall.rating} <span className="text-base">/ 5.00</span>
+                </p>
+                <p className="text-sm text-gray-500">
+                  Based on <span className="font-medium">{overall.count}</span>{" "}
+                  student votes
+                </p>
               </div>
-              <p className="text-[11px] text-gray-400 mt-1">
-                Updated after every submission
+              <div className="flex flex-col items-end">
+                <div className="flex items-center gap-1 text-yellow-400">
+                  {[1, 2, 3, 4, 5].map((i) => (
+                    <Star
+                      key={i}
+                      size={18}
+                      className={
+                        Number(overall.rating) >= i ? "fill-yellow-400" : ""
+                      }
+                    />
+                  ))}
+                </div>
+                <p className="text-[11px] text-gray-400 mt-1">
+                  Updated after every submission
+                </p>
+              </div>
+            </div>
+            
+            {/* Date added at the bottom of overall card */}
+            <div className="text-center pt-3 border-t border-gray-100">
+              <p className="text-sm text-orange-500 font-medium">
+                {formattedDate}
               </p>
             </div>
           </div>
